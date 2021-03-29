@@ -1,22 +1,34 @@
-import logo from './logo.svg';
 import './App.css';
+import React, { useState, useEffect } from 'react';
 
 function App() {
+
+  const [teilnehmer, setTeilnehmer] = useState([]);
+
+  useEffect(() => {   
+    if (teilnehmer.length===0) {
+      fetch("/teilnehmer").then( (httpResponse) => {
+        // Backend bauen....
+        httpResponse.json().then( antwortObjekt => {
+          const leute = antwortObjekt;
+          setTeilnehmer(leute);
+        })
+      }).catch( fehler => { console.error(fehler)});
+    }
+  });
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Ich bin mein tolles Frontend. geliefert von einem Express-Server.
+          Wurde aktualisiert.
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <ul>
+          {teilnehmer.map( (einTeilnehmer) => {
+            return <li>{einTeilnehmer}</li>
+          })}
+        </ul>
       </header>
     </div>
   );
